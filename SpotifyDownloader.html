@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta lang="en" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="SpotifyDownloader.css">
+    <title>Spotify Downloader Free</title>
+
+    <meta name="description" content="Free Spotify downloader for downloading Spotify songs via link">
+    <meta name="msapplication-TileImage" content="https://tobiasrick.de/SpotifyDownloader.png">
+    <meta property="og:site_name" content="Spotify Downloader Free">
+    <meta property="og:title" content="Spotify Downloader Free">
+    <meta property="og:description" content="Free Spotify downloader for downloading Spotify songs via link">
+    <meta property="og:image" itemprop="image" content="https://tobiasrick.de/SpotifyDownloader.png">
+    <meta property="og:type" content="website" />
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
+    <meta property="og:url" content="https://tobiasrick.de/SpotifyDownloader.html">
+    <link rel="icon" href="SpotifyDownloader.png" type="image/png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-8J4JDM8GTP"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-8J4JDM8GTP');
+	</script>
+    <script data-ad-client="ca-pub-8790018561950034" async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        !function (Gleap, t, i) {
+            if (!(Gleap = window.Gleap = window.Gleap || []).invoked) {
+                for (window.GleapActions = [], Gleap.invoked = !0, Gleap.methods = ["identify", "clearIdentity", "attachCustomData", "setCustomData", "removeCustomData", "clearCustomData", "registerCustomAction", "logEvent", "sendSilentCrashReport", "startFeedbackFlow", "setAppBuildNumber", "setAppVersionCode", "preFillForm", "setApiUrl", "setFrameUrl", "isOpened", "open", "close", "on", "setLanguage", "setOfflineMode", "initialize"], Gleap.f = function (e) { return function () { var t = Array.prototype.slice.call(arguments); window.GleapActions.push({ e: e, a: t }) } }, t = 0; t < Gleap.methods.length; t++)Gleap[i = Gleap.methods[t]] = Gleap.f(i); Gleap.load = function () { var t = document.getElementsByTagName("head")[0], i = document.createElement("script"); i.type = "text/javascript", i.async = !0, i.src = "https://js.gleap.io/latest/index.js", t.appendChild(i) }, Gleap.load(),
+                    Gleap.initialize("UX7y79R0xvpv12X2F4Ln6UDWN2zGninc")
+            }
+        }();
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div id="content">
+        <h1 class="title">Spotify-Downloader</h1>
+        <br>
+
+        <div id="song-container">
+            <p>Song:</p>
+            <div class="popup" onclick="songPopup()" style="float: right; vertical-align: top; display: inline;"><img
+                    src="ask.png" alt="Ask" width="20px" height="auto">
+                <span class="popuptext" id="songP">Put your song link or search query in here.</span>
+            </div>
+            <br>
+            <input type="text" id="song" size="30" placeholder="L&zwnj;ink or search query" autocomplete="off">
+
+        </div>
+
+        <br>
+        <br>
+
+        <div id="parent-div">
+            <div class="select">
+                <p>Output-format:</p>
+                <div class="popup" onclick="formatPopup()" style="float: right; vertical-align: top; display: inline;">
+                    <img src="ask.png" alt="Ask" width="20px" height="auto">
+                    <span class="popuptext" id="formatP">Choose, in which format the song should be downloaded.</span>
+                </div>
+                <select name="Output-format" id="outputFormat">
+                    <option value="mp3">mp3</option>
+                    <option value="m4a">m4a</option>
+                    <option value="wav">wav</option>
+                    <option value="ogg">ogg</option>
+                    <option value="opus">opus</option>
+                    <option value="flac">flac</option>s
+                </select>
+            </div>
+
+            <br>
+            <br>
+            <br>
+
+            <div class="select">
+                <p>Lyrics-provider:</p>
+                <div class="popup" onclick="lyricPopup()" style="float: right; vertical-align: top; display: inline;">
+                    <img src="ask.png" alt="Ask" width="20px" height="auto">
+                    <span class="popuptext" id="lyricP">Choose the lyrics provider.</span>
+                </div>
+                <select name="Lyrics-provider" id="lyrics">
+                    <option value="musixmatch">musixmatch</option>
+                    <option value="genius">genius</option>
+                </select>
+            </div>
+        </div>
+
+        <br>
+        <button onclick="download()" id="find">Find</button>
+        <ul id="output">
+        </ul>
+        <br>
+        <button onclick="notifyMe()" id="notifyUserButton">Notify me, when task is finished</button>
+        <br>
+        <br>
+        <p style="margin: 1%;" id="downloadCounter">Download counter: </p>
+        <br>
+        <br>
+        <p style="margin: 1%; margin-right: 30%;">This Spotify downloader is legal for personal use
+            only. The music may not be distributed or played in public.</p>
+    </div>
+
+
+    <script>
+        let number = 0;
+        let notifyUser = false;
+
+        function downloadCounterUpdate() {
+            var url = 'https://tobiasrick.de:8443/downloads';
+            var storedText;
+
+            fetch(url)
+                .then(function (response) {
+                    response.text().then(function (text) {
+                        storedText = text;
+                        done();
+                    });
+                });
+
+            function done() {
+                $('#downloadCounter').text("Download counter: " + storedText);
+            }
+        }
+
+        downloadCounterUpdate();
+
+        function containsAnyLetter(str) {
+            return /[a-zA-Z]/.test(str);
+        }
+
+        $("#song").keyup(function (event) {
+            let keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                download();
+            }
+        });
+
+        async function download() {
+            let song = document.getElementById("song").value;
+            let outputFormat = document.getElementById("outputFormat").value;
+            let lyrics = document.getElementById("lyrics").value;
+
+            song = encodeURIComponent(song);
+            outputFormat = encodeURIComponent(outputFormat);
+            lyrics = encodeURIComponent(lyrics);
+
+            request = "https://tobiasrick.de:8443/downloadV3?song=" + song + "&outputFormat=" + outputFormat + "&lyrics=" + lyrics;
+
+            console.log(request);
+
+            if (containsAnyLetter(song)) {
+                if (request.includes(encodeURIComponent("https://open.spotify.com/playlist/"))) {
+                    if (getCookie("downloadPlaylist") == "") {
+                        const { value: accept } = await Swal.fire({
+                            title: 'Info...',
+                            color: 'black',
+                            icon: 'info',
+                            text: 'Downloading a playlist can take up to a few minutes.',
+                            input: 'checkbox',
+                            inputValue: 0,
+                            inputPlaceholder: 'Do not show again',
+                            confirmButtonText: 'OK',
+                        })
+                        if (accept) {
+                            setCookie("downloadPlaylist", true, 365);
+                        }
+                    }
+                } else if (!request.includes(encodeURIComponent("https://open.spotify.com/track/"))) {
+                    if (getCookie("singleSongRequest") == "") {
+                        const { value: accept } = await Swal.fire({
+                            title: 'Info...',
+                            color: 'black',
+                            icon: 'info',
+                            text: 'Search queries are often very imprecise. Please use links if you want to get accurate results.',
+                            input: 'checkbox',
+                            inputValue: 0,
+                            inputPlaceholder: 'Do not show again',
+                            confirmButtonText: 'OK',
+                        })
+                        if (accept) {
+                            setCookie("singleSongRequest", true, 365);
+                        }
+                    }
+                }
+                downloadFetch(request, document.getElementById("song").value, number);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: 'red',
+                    background: '#00c70a',
+                    color: 'black',
+                    title: 'Oops...',
+                    text: 'Please provide a search query or link!',
+                })
+
+            }
+        }
+
+
+        function downloadFetch(urlToSend, song, numberVal) {
+            let listElement = $('#output').prepend(
+                $('<li>').append(song + ": ").attr('id', numberVal));
+            $('#' + numberVal).append('<div>');
+            $('#' + numberVal + " div").attr("class", "loader");
+            $('#' + numberVal + " div").load("Loading.html");
+            number++;
+
+            let myRequest = new Request(urlToSend);
+
+            fetch(myRequest)
+                .then(function (response) {
+                    response.text().then(function (text) {
+                        function fileExists() {
+                            $.ajax({
+                                url: "https://tobiasrick.de/Music/" + text,
+                                type: 'HEAD',
+                                error: function () {
+                                    setTimeout(fileExists, 5000);
+                                },
+                                success: function () {
+                                    let fileName = text;
+
+                                    console.log(text);
+                                    let link = document.createElement('a');
+                                    link.href = "https://tobiasrick.de/Music/" + fileName;
+                                    link.text = "Download";
+
+                                    $('#' + numberVal + " div").remove();
+                                    $('#' + numberVal).append($('<a>').attr('href', link).attr("download", "").attr("target", "_blank").append("Download"));
+
+                                    if (Notification.permission === "granted" && notifyUser) {
+                                        // If it's okay let's create a notification
+                                        var title = "Found Song";
+                                        icon = 'SpotifyDownloader.png';
+                                        var body = "Click here to Download it";
+                                        var notification = new Notification(title, { body, icon });
+                                        notification.onclick = function () {
+                                            window.parent.focus();
+                                            notification.close();
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        fileExists();
+                    })
+                        .catch(function () {
+                            $('#' + numberVal + " div").remove();
+                            $('#' + numberVal).append("ERROR");
+                            if (Notification.permission === "granted" && notifyUser) {
+                                // If it's okay let's create a notification
+                                var title = "Error";
+                                icon = 'SpotifyDownloader.png';
+                                var body = "Click here to retry downloading";
+                                var notification = new Notification(title, { body, icon });
+                                notification.onclick = function () {
+                                    window.parent.focus();
+                                    notification.close();
+                                    downloadFetch(urlToSend, song, numberVal);
+                                }
+                            }
+                        });
+                })
+        }
+
+
+        function notifyMe() {
+            if (!notifyUser) {
+                notifyUser = true;
+                Notification.requestPermission();
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Notifications activated'
+                })
+
+                $("#notifyUserButton").text("Deactivate notifications");
+            } else {
+                notifyUser = false;
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Notifications deactivated'
+                })
+
+                $("#notifyUserButton").text("Notify me, when task is finished");
+            }
+
+            // Let's check if the browser supports notifications
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+        }
+    </script>
+    <script>
+        // When the user clicks on <div>, open the popup
+        function songPopup() {
+            var popup = document.getElementById("songP");
+            popup.classList.toggle("show");
+        }
+
+        function formatPopup() {
+            var popup = document.getElementById("formatP");
+            popup.classList.toggle("show");
+        }
+
+        function lyricPopup() {
+            var popup = document.getElementById("lyricP");
+            popup.classList.toggle("show");
+        }
+    </script>
+    <script>
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            const name = cname + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function checkCookie() {
+            let user = getCookie("username");
+            if (user != "") {
+                alert("Welcome again " + user);
+            } else {
+                user = prompt("Please enter your name:", "");
+                if (user != "" && user != null) {
+                    setCookie("username", user, 365);
+                }
+            }
+        }
+
+        function eraseCookie(name) {
+            document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+    </script>
+</body>
+
+</html>
